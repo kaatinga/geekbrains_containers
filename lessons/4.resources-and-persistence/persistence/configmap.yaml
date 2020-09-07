@@ -11,7 +11,7 @@ data:
 
       default_type text/plain;
 
-      location / {
+      location /files {
         alias /data;
         autoindex on;
         client_body_temp_path /tmp;
