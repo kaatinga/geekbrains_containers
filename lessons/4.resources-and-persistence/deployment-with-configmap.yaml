@@ -16,6 +16,14 @@ spec:
       containers:
       - image: nginx:1.12
         name: nginx
+        env:
+        - name: DB_USER
+          value: postgres
+        - name: DB_PASSWORD        
+          valueFrom:
+           secretKeyRef:
+            name: my-secret
+            key: db-pass         
         ports:
         - containerPort: 80
         resources:
