@@ -1,0 +1,29 @@
+--- 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: factoriotools
+spec:
+  replicas: 1
+  strategy:
+   type: RollingUpdate
+   rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0        
+  selector:
+    matchLabels:
+      app: ft
+  template:
+    metadata:
+      labels:
+        app: ft
+    spec:
+      containers:
+      - image: factoriotools/factorio:1.0.0
+        name: factorio
+        ports:
+        - containerPort: 27015
+          protocol: TCP
+        - containerPort: 34197
+          protocol: UDP
