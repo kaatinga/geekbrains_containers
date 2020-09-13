@@ -1,0 +1,53 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homework-4
+spec:
+  replicas: 1
+  strategy:
+   type: Recreate
+  selector:
+    matchLabels:
+      app: hm4
+  template:
+    metadata:
+      labels:
+        app: hm4
+    spec:
+      containers:
+      - image: postgres:10.13
+        name: postgres
+        env:
+        - name: POSTGRES_USER
+          value: testuser
+        - name: POSTGRES_PASSWORD        
+          valueFrom:
+           secretKeyRef:
+            name: sqlpassword
+            key: db-pass
+        - name: POSTGRES_DB
+          value: testdatabase
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata         
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 200m 
+            memory: 400Mi
+          limits:
+            cpu: 200m
+            memory: 600Mi
+        volumeMounts:
+        - name: sqldata
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: mydir
+        hostPath:
+          path: /var/lib/postgresql
+          type: DirectoryOrCreate
+      - name: sqldata
+        persistentVolumeClaim:
+          claimName: sqldata
